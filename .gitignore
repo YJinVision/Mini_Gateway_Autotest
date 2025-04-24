@@ -172,3 +172,5 @@ side_project/
 *.crt
 *.bin
 *.gbl
+config.ini
+.ignore
