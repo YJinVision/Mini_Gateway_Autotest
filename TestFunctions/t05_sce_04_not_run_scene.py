@@ -55,7 +55,7 @@ curr_path = os.path.dirname(os.path.abspath(__file__))
 main_path = os.path.dirname(os.path.dirname(curr_path))  #.\iHub_Autotest
 sys.path.append(main_path)
 import MiniGateway.ihub_web_test_function as tf
-import mqtt_lite as mq
+import MiniGateway.mqtt_lite as mq
 
 class sce_04_not_run_scene(unittest.TestCase):
     @classmethod

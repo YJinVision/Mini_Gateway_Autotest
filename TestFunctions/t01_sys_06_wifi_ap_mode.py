@@ -41,6 +41,10 @@ import mqtt_lite as mq
 class sys_06_wifi_ap_mode(unittest.TestCase):
     @classmethod
     def setUpClass(self):
+
+        self.encode = 'utf-8'
+        subprocess.run('chcp 437',shell=True)
+
         tf.output(f"\n[STATUS] {self.__name__} start.\n")
         # 設置ChromeDriver選項
         self.d = webdriver.Chrome(tf.set_chrome_options()) 
@@ -52,7 +56,8 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
         feedback = subprocess.run(cmd, 
                                   capture_output=True, 
                                   text=True,
-                                  shell=True)
+                                  shell=True
+                                  )
         if "n" in feedback.stdout:
             msg = "Set wifi interface need admin permision. Skip test."
             tf.output(msg)
@@ -273,7 +278,7 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 tf.wifi_ap_ssid = tf.wifi_ap_ssid + low_mac
                 # AutoTestApModeSsid_4FBCE2 -> 測試用SSID
                 print(f"[INFO] 預設SSID: {tf.wifi_default_ssid}")
-                print(f"[INFI] 測試SSID: {tf.wifi_ap_ssid}")
+                print(f"[INFO] 測試SSID: {tf.wifi_ap_ssid}")
             except Exception as err:
                 tf.catch_exc(f"設定SSID時發生錯誤", self._testMethodName,  err)
                 return False
@@ -284,7 +289,9 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 show_cmd = "netsh wlan show interface"
                 result = subprocess.run(show_cmd, 
                                         capture_output=True, 
-                                        encoding='utf-8')
+                                        encoding=self.encode
+                                        # encoding='big5'
+                                        )
                 for line in result.stdout.split("\n"):
                     if "Name" in line or "名稱" in line:
                         pc_wifi_interf = line[line.rfind(":")+2:]  
@@ -321,7 +328,7 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 rd_cmd = f"rmdir /s /q {profile_path}"
                 result = subprocess.run(rd_cmd, 
                                         capture_output=True, 
-                                        encoding='utf-8', 
+                                        # encoding=self.encode, 
                                         shell=True)
                 print(f"[INFO] 清除已設定檔案")
                 return True
@@ -480,12 +487,12 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     result = subprocess.run(chk_interf, 
                                             capture_output=True, 
-                                            encoding='utf-8').stdout
+                                            encoding=self.encode).stdout
                     if pc_wifi_interf not in result:
                         break
                     subprocess.run(disable_cmd, 
                                     capture_output=True, 
-                                    encoding='utf-8')   # Disable interface
+                                    encoding=self.encode)   # Disable interface
                     time.sleep(1)
                 else:
                     print(f"[FAIL] 已超時, 無法關閉Wi-Fi介面")
@@ -496,12 +503,12 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     result = subprocess.run(chk_interf, 
                                             capture_output=True, 
-                                            encoding='utf-8').stdout
+                                            encoding=self.encode).stdout
                     if pc_wifi_interf in result:
                         break
                     subprocess.run(enable_cmd, 
                                 capture_output=True, 
-                                    encoding='utf-8')    # Enable interface
+                                    encoding=self.encode)    # Enable interface
                     time.sleep(1)
                 else:
                     print(f"[FAIL] 已超時, 無法開啟Wi-Fi介面")
@@ -521,7 +528,7 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     wifi_list = subprocess.run(scan_cmd, 
                                                capture_output=True, 
-                                               encoding='utf-8')
+                                               encoding=self.encode)
                     if tf.wifi_ap_ssid in wifi_list.stdout:
                         print(f"[INFO] Ap Mode測試SSID已可連線({datetime.now()})") 
                         tf.output(f"[INFO] Ap Mode測試SSID已可連線({datetime.now()})") 
@@ -546,7 +553,7 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     join_ack = subprocess.run(join_cmd, 
                                             capture_output=True, 
-                                            encoding='utf-8')
+                                            encoding=self.encode)
                     
                     if join_ack.returncode == 0:
                         print(f"[INFO] 已連線到{tf.wifi_ap_ssid}({datetime.now()})")
@@ -759,12 +766,12 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     result = subprocess.run(chk_interf, 
                                             capture_output=True, 
-                                            encoding='utf-8').stdout
+                                            encoding=self.encode).stdout
                     if pc_wifi_interf not in result:
                         break
                     subprocess.run(disable_cmd, 
                                    capture_output=True, 
-                                   encoding='utf-8')    # Disable interface
+                                   encoding=self.encode)    # Disable interface
                     time.sleep(1)
                 else:
                     print(f"[FAIL] 已超時, 無法Wi-Fi介面")
@@ -775,12 +782,12 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     result = subprocess.run(chk_interf, 
                                             capture_output=True, 
-                                            encoding='utf-8').stdout
+                                            encoding=self.encode).stdout
                     if pc_wifi_interf in result:
                         break
                     subprocess.run(enable_cmd, 
                                    capture_output=True, 
-                                   encoding='utf-8')    # Enable interface
+                                   encoding=self.encode)    # Enable interface
                     time.sleep(1)
                 else:
                     print(f"[FAIL] 已超時, 無法開啟Wi-Fi介面")
@@ -800,7 +807,7 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     wifi_list = subprocess.run(scan_cmd, 
                                                capture_output=True, 
-                                               encoding='utf-8')
+                                               encoding=self.encode)
                     if tf.wifi_default_ssid in wifi_list.stdout:
                         print(f"[INFO] Ap Mode預設SSID已可連線({datetime.now()})") 
                         tf.output(f"[INFO] Ap Mode預設SSID已可連線({datetime.now()})") 
@@ -825,7 +832,7 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     join_ack = subprocess.run(join_cmd, 
                                               capture_output=True, 
-                                              encoding='utf-8')
+                                              encoding=self.encode)
                     if join_ack.returncode == 0:
                         print(f"[INFO] 已連線到{tf.wifi_default_ssid}({datetime.now()})")
                         tf.output(f"[INFO] 已連線到{tf.wifi_default_ssid}({datetime.now()})")
@@ -1004,12 +1011,12 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     result = subprocess.run(chk_interf, 
                                             capture_output=True, 
-                                            encoding='utf-8').stdout
+                                            encoding=self.encode).stdout
                     if pc_wifi_interf not in result:
                         break
                     subprocess.run(disable_cmd, 
                                    capture_output=True, 
-                                   encoding='utf-8')    # Disable interface
+                                   encoding=self.encode)    # Disable interface
                     time.sleep(1)
                 else:
                     print(f"[FAIL] 已超時, 無法關閉Wi-Fi介面")
@@ -1020,12 +1027,12 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     result = subprocess.run(chk_interf, 
                                             capture_output=True, 
-                                            encoding='utf-8').stdout
+                                            encoding=self.encode).stdout
                     if pc_wifi_interf in result:
                         break
                     subprocess.run(enable_cmd, 
                                    capture_output=True, 
-                                   encoding='utf-8')    # Enable interface
+                                   encoding=self.encode)    # Enable interface
                     time.sleep(1)
                 else:
                     print(f"[FAIL] 已超時, 無法開啟Wi-Fi介面")
@@ -1045,7 +1052,7 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     wifi_list = subprocess.run(scan_cmd, 
                                                capture_output=True, 
-                                               encoding='utf-8')
+                                               encoding=self.encode)
                     if pc_wifi_ssid in wifi_list.stdout:
                         print(f"[INFO] {pc_wifi_ssid} 已可連線({datetime.now()})") 
                         tf.output(f"[INFO] {pc_wifi_ssid} 已可連線({datetime.now()})") 
@@ -1069,7 +1076,7 @@ class sys_06_wifi_ap_mode(unittest.TestCase):
                 while datetime.now() <= start_time + timeout:
                     join_ack = subprocess.run(join_cmd, 
                                               capture_output=True, 
-                                              encoding='utf-8')
+                                              encoding=self.encode)
                     if join_ack.returncode == 0:
                         print(f"[INFO] 已連線到{pc_wifi_ssid}({datetime.now()})")
                         tf.output(f"[INFO] 已連線到{pc_wifi_ssid}({datetime.now()})")

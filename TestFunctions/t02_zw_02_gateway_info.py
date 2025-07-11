@@ -34,7 +34,7 @@ curr_path = os.path.dirname(os.path.abspath(__file__))
 main_path = os.path.dirname(os.path.dirname(curr_path))  #.\iHub_Autotest
 sys.path.append(main_path)
 import MiniGateway.ihub_web_test_function as tf
-import mqtt_lite as mq
+import MiniGateway.mqtt_lite as mq
 
 class zw_02_gateway_rename(unittest.TestCase):
     @classmethod
@@ -717,9 +717,12 @@ class zw_02_gateway_rename(unittest.TestCase):
                 print(f"[CLICK] Edit")
                 box_elem = '//*[@id="Zw_Setting_Gateway_Modal_Rename"]'
                 name_box = self.d.find_element(By.XPATH, box_elem)
+                time.sleep(0.5)
                 name_box.clear()
+                time.sleep(0.5)
                 name_box.send_keys(master_name)
                 print(f"[SENDKEY] {master_name}")
+                time.sleep(0.5)
                 edit_btn.click()
                 print(f"[CLICK] Save")
             except Exception as err:

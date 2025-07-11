@@ -479,10 +479,12 @@ def add_new_wifi(SSID, password, path="."):
         </security>
     </MSM>
 </WLANProfile>"""
+    subprocess.run('chcp 437', shell=True)
+    encode = 'utf-8'
     file_path = os.path.join(path, f"{SSID}.xml")
     # 寫入SSID.xml檔
     try:
-        with open(file_path, 'w', encoding='utf-8') as profile:
+        with open(file_path, 'w', encoding=encode) as profile:
             profile.write(profile_template)
     except OSError as err:
         print(f"[ERROR] 無法建立檔案 {file_path}: {err}")
@@ -493,7 +495,7 @@ def add_new_wifi(SSID, password, path="."):
         add_cmd = f'netsh wlan add profile filename="{file_path}'
         result = subprocess.run(add_cmd, 
                                 capture_output=True, 
-                                encoding='utf-8')
+                                encoding=encode)
         if result.returncode != 0:  # return 0 when success
             print(f"[ERROR] 無法新增{SSID}設定檔")
             return False
@@ -506,7 +508,7 @@ def add_new_wifi(SSID, password, path="."):
         show_cmd = 'netsh wlan show profiles'
         result = subprocess.run(show_cmd, 
                                 capture_output=True, 
-                                encoding='utf-8')
+                                encoding=encode)
         if SSID in result.stdout:
             print(f"[INFO] 成功建立設定檔: {SSID}")
             return True

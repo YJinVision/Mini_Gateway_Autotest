@@ -46,7 +46,7 @@ curr_path = os.path.dirname(os.path.abspath(__file__))
 main_path = os.path.dirname(os.path.dirname(curr_path))  #.\iHub_Autotest
 sys.path.append(main_path)
 import MiniGateway.ihub_web_test_function as tf
-import mqtt_lite as mq
+import MiniGateway.mqtt_lite as mq
 
 class sce_02_modify_scene(unittest.TestCase):
     @classmethod
@@ -894,7 +894,7 @@ class sce_02_modify_scene(unittest.TestCase):
                         '/div/div[2]/div[2]/table/tbody/tr/td[5]/span')
                 # 檢查Trigger
                 flag_tr = True
-                if trigger["Room"].text == at_dev_room[tf.siren]:
+                if trigger["Room"].get_attribute("data-value") == at_dev_room[tf.siren]:
                     print(f"[INFO] Trigger-location正確")
                 else:
                     print(f"[FAIL] Trigger-location錯誤: {trigger["Room"].text}")
@@ -1082,7 +1082,7 @@ class sce_02_modify_scene(unittest.TestCase):
                         '/div/div[2]/div[3]/table/tbody/tr[2]/td[5]/span')
                 # 檢查Task
                 flag_ta = True
-                if task["Room"].text == at_dev_room[tf.plug]:
+                if task["Room"].get_attribute("data-value") == at_dev_room[tf.plug]:
                     print(f"[INFO] Task-location正確")
                 else:
                     print(f"[FAIL] Task-location錯誤: {task["Room"].text}")

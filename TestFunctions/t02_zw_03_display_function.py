@@ -28,7 +28,7 @@ curr_path = os.path.dirname(os.path.abspath(__file__))
 main_path = os.path.dirname(os.path.dirname(curr_path))  #.\iHub_Autotest
 sys.path.append(main_path)
 import MiniGateway.ihub_web_test_function as tf
-import mqtt_lite as mq
+import MiniGateway.mqtt_lite as mq
 
 class zw_03_display_function(unittest.TestCase):
     @classmethod
@@ -427,7 +427,11 @@ class zw_03_display_function(unittest.TestCase):
                 battery_table = self.d.find_element(By.XPATH, sort_battery_elem)
                 sort_plug_elem = '//*[@id="All_Dev_List_Node_Tb_Plug"]'
                 plug_table = self.d.find_element(By.XPATH, sort_plug_elem)
-                if battery_table.is_displayed() and plug_table.is_displayed():
+                display_batt_table = battery_table.get_attribute("style")
+                display_plug_talbe = plug_table.get_attribute("style")
+
+                if "display: block;" in display_batt_table and \
+                    "display: block;" in display_plug_talbe:
                     print(f"[INFO] 已確認排序")
                     return True
             except Exception as err:
